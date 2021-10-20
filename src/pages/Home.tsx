@@ -1,11 +1,11 @@
 import React from 'react';
-import { Header, BoxContainer, Box } from '../components';
+import { Header, InfiniteContainer } from '../components';
 
 const Home = () => {
   return (
     <>
       <Header />
-      <BoxContainer />
+      <InfiniteContainer />
     </>
   );
 };
