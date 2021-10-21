@@ -1,66 +1,70 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import axios from 'axios';
-import { Card } from '..';
+import axios, { AxiosResponse } from 'axios';
+import { Card, Loader } from '@src/components';
 
 import './index.scss';
 
-const InfiniteContainer = () => {
-  let observer: IntersectionObserver;
+const InfiniteContainer: React.FC = () => {
   const loader = useRef<HTMLDivElement>(null);
-  const [images, setImages] = useState<any>([]);
+  const [images, setImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getPhotos = async () => {
-    await axios
-      .get('https://api.unsplash.com/photos/random?count=9', {
+    setIsLoading(true);
+    const response: AxiosResponse<any> = await axios.get(
+      'https://api.unsplash.com/photos/random',
+      {
         params: {
-          client_id: '2ebZBspF3MpEDtPNYzNsPekVOuRxzlZi1zs5Wl2YjFA',
-          count: 10,
+          client_id: process.env.REACT_APP_UNSPLASH_ACCESS_KEY,
+          count: 4,
         },
-      })
-      .then((res: any) => {
-        setImages([
-          ...images,
-          ...res.data.map((image: any) => image.urls.small),
-        ]);
-      });
+      },
+    );
+
+    setImages((state: string[]) => [
+      ...state,
+      ...response.data.map((image: any) => image.urls.small),
+    ]);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
-  // Viewport에 존재하면 실행할 Callback
-  const handleInfiniteScroll = useCallback(([entry]) => {
-    // console.log(entry);
-    console.log('Callback 실행');
-  }, []);
-
-  useEffect(() => {
-    getPhotos();
+  const handleInfiniteScroll = useCallback(async ([entry], observer) => {
+    if (entry.isIntersecting) {
+      console.log(entry.target);
+      console.log('IntersectionObserver Callback 실행');
+      // observer.unobserve(entry.target);
+      // await getPhotos();
+      // observer.observe(entry.target);
+    }
   }, []);
 
   useEffect(() => {
     const option = {
       root: null,
-      rootMargin: '20px',
-      threshold: 0.8,
+      threshold: 0.7,
     };
-    /*     const lastDivElement = document.querySelector('.infiniteContainer');
-    console.log(lastDivElement?.lastChild); */
+    let observer: IntersectionObserver;
 
-    const lastDivElement =
-      document.querySelectorAll('.card')[images.length - 1];
-
-    if (lastDivElement) {
+    if (loader.current) {
       observer = new IntersectionObserver(handleInfiniteScroll, option);
-      observer.observe(lastDivElement);
+      observer.observe(loader.current);
     }
-
-    return () => observer.disconnect();
-  }, [images]);
+    return () => observer && observer.disconnect();
+  }, []);
 
   return (
-    <section className="infiniteContainer">
-      {images.map((url: string) => (
-        <Card key={url} url={url} />
-      ))}
-    </section>
+    <>
+      <section className="infiniteContainer">
+        {images.map((url: string) => (
+          <Card key={url} url={url} />
+        ))}
+        <div className="loadingContainer" ref={loader}>
+          {isLoading && <Loader />}
+        </div>
+      </section>
+    </>
   );
 };
 

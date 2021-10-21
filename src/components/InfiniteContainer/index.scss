@@ -1,4 +1,10 @@
 .infiniteContainer {
-  column-count: 3;
+  column-count: 1;
   column-gap: 0px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

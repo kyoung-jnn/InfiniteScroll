@@ -11,8 +11,9 @@
     "baseUrl": "./",
     "outDir": "./dist",
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["src/*"]
     },
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types,", "./@types"],
     "resolveJsonModule": true,
     "sourceMap": true,

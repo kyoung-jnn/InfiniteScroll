@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, InfiniteContainer } from '../components';
+import { Header, InfiniteContainer } from '@src/components';
 
 const Home = () => {
   return (
