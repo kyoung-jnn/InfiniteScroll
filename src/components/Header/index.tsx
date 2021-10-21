@@ -3,10 +3,13 @@ import './index.scss';
 
 const Header: React.FC = () => {
   return (
-    <section className="wrapper">
-      <header className="header">
-        <div className="logo">Infinite Scroll & Infinite Images 💫</div>
-      </header>
+    <section className="header">
+      <div className="logo">
+        Infinite Scroll & Infinite Images{' '}
+        <span role="img" aria-label="이모지">
+          💫
+        </span>
+      </div>
     </section>
   );
 };

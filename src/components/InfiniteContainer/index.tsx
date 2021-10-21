@@ -9,7 +9,7 @@ const InfiniteContainer: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const getPhotos = async () => {
+  const getPhotos = useCallback(async () => {
     setIsLoading(true);
     const response: AxiosResponse<any> = await axios.get(
       'https://api.unsplash.com/photos/random',
@@ -21,29 +21,26 @@ const InfiniteContainer: React.FC = () => {
       },
     );
 
-    setImages((state: string[]) => [
-      ...state,
-      ...response.data.map((image: any) => image.urls.small),
-    ]);
     setTimeout(() => {
+      setImages((state: string[]) => [
+        ...state,
+        ...response.data.map((image: any) => image.urls.small),
+      ]);
       setIsLoading(false);
     }, 1000);
-  };
+  }, []);
 
-  const handleInfiniteScroll = useCallback(async ([entry], observer) => {
-    if (entry.isIntersecting) {
-      console.log(entry.target);
+  const handleInfiniteScroll = useCallback(async ([entry]) => {
+    if (entry.isIntersecting && !isLoading) {
       console.log('IntersectionObserver Callback 실행');
-      // observer.unobserve(entry.target);
-      // await getPhotos();
-      // observer.observe(entry.target);
+      await getPhotos();
     }
   }, []);
 
   useEffect(() => {
     const option = {
       root: null,
-      threshold: 0.7,
+      threshold: 0.5,
     };
     let observer: IntersectionObserver;
 
@@ -60,7 +57,7 @@ const InfiniteContainer: React.FC = () => {
         {images.map((url: string) => (
           <Card key={url} url={url} />
         ))}
-        <div className="loadingContainer" ref={loader}>
+        <div className="loadingWrapper" ref={loader}>
           {isLoading && <Loader />}
         </div>
       </section>
