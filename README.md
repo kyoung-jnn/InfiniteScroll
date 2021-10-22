@@ -1,4 +1,5 @@
 # React Hooks 을 이용한 Infinite Scroll 💫
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3cddc0a8-ba74-404f-85aa-203fab5a29d9/deploy-status)](https://app.netlify.com/sites/kyoung-jnn-infinite-scroll/deploys)
 
 **`Observer Interesction API`** 와 **`useRef Hooks`** 이용하여 **Infinite Scroll** 애니메이션 구현하기
 
