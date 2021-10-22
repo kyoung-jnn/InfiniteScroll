@@ -38,5 +38,9 @@ module.exports = {
       },
     ],
   },
-  plugins: [new dotenv()],
+  plugins: [
+    new dotenv({
+      systemvars: true,
+    }),
+  ],
 };
