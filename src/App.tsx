@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from './pages/Home';
+import Home from '@src/pages/Home';
 import 'normalize.css';
 
 const App: React.FC = () => (
